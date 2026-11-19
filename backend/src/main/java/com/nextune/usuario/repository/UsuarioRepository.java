@@ -1,5 +1,6 @@
-package com.nextune.usuario;
+package com.nextune.usuario.repository;
 
+import com.nextune.usuario.entity.UsuarioModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

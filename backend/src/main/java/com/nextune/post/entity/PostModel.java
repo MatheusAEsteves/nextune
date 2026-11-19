@@ -1,7 +1,7 @@
-package com.nextune.post;
+package com.nextune.post.entity;
 
-import com.nextune.artista.ArtistaModel;
-import com.nextune.genero.GeneroModel;
+import com.nextune.artista.entity.ArtistaModel;
+import com.nextune.genero.entity.GeneroModel;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;

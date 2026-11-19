@@ -1,5 +1,7 @@
-package com.nextune.feed;
+package com.nextune.feed.repository;
 
+import com.nextune.feed.entity.InteracaoId;
+import com.nextune.feed.entity.InteracaoModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

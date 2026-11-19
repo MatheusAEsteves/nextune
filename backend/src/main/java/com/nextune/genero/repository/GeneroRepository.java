@@ -1,5 +1,6 @@
-package com.nextune.genero;
+package com.nextune.genero.repository;
 
+import com.nextune.genero.entity.GeneroModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
