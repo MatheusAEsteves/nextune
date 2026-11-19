@@ -1,6 +1,6 @@
-package com.nextune.artista;
+package com.nextune.artista.entity;
 
-import com.nextune.usuario.UsuarioModel;
+import com.nextune.usuario.entity.UsuarioModel;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;

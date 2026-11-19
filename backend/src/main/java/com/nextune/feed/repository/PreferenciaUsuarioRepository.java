@@ -1,5 +1,6 @@
-package com.nextune.feed;
+package com.nextune.feed.repository;
 
+import com.nextune.feed.entity.PreferenciaUsuarioModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

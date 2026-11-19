@@ -1,7 +1,7 @@
-package com.nextune.feed;
+package com.nextune.feed.entity;
 
-import com.nextune.genero.GeneroModel;
-import com.nextune.usuario.UsuarioModel;
+import com.nextune.genero.entity.GeneroModel;
+import com.nextune.usuario.entity.UsuarioModel;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;

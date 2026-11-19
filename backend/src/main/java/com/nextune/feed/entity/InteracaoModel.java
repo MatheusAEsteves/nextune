@@ -1,4 +1,4 @@
-package com.nextune.feed;
+package com.nextune.feed.entity;
 
 import jakarta.persistence.*;
 

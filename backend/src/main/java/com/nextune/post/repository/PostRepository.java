@@ -1,5 +1,6 @@
-package com.nextune.post;
+package com.nextune.post.repository;
 
+import com.nextune.post.entity.PostModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

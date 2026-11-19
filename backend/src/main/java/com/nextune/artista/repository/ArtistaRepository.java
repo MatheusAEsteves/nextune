@@ -1,5 +1,6 @@
-package com.nextune.artista;
+package com.nextune.artista.repository;
 
+import com.nextune.artista.entity.ArtistaModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

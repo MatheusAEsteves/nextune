@@ -1,4 +1,4 @@
-package com.nextune.usuario;
+package com.nextune.usuario.entity;
 
 public enum RoleUsuario {
     USER,

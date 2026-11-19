@@ -1,4 +1,4 @@
-package com.nextune.usuario;
+package com.nextune.usuario.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;

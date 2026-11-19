@@ -1,4 +1,4 @@
-package com.nextune.genero;
+package com.nextune.genero.entity;
 
 import jakarta.persistence.*;
 
