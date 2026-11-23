@@ -31,7 +31,7 @@ public class ArtistaService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        if (artistaRepository.existsByUsuarioID(usuarioId)) {
+        if (artistaRepository.existsByUsuarioId(usuarioId)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Usuário já é artista");
         }
 

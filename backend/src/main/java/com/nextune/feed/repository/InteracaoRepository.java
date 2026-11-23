@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface InteracaoRepository extends JpaRepository<InteracaoModel, InteracaoId> {
-    List<InteracaoModel> findByUsuarioIdAndCurtidoTrueOrderByDataAtualizacaoDesc(UUID usuarioId);
-    List<InteracaoModel> findByUsuarioIdAndSalvoTrueOrderByDataAtualizacaoDesc(UUID usuarioId);
+    List<InteracaoModel> findByIdUsuarioIdAndCurtidoTrueOrderByDataAtualizacaoDesc(UUID usuarioId);
+    List<InteracaoModel> findByIdUsuarioIdAndSalvoTrueOrderByDataAtualizacaoDesc(UUID usuarioId);
     long countByIdPostIdAndCurtidoTrue(UUID postId);
 }

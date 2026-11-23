@@ -9,6 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface ArtistaRepository extends JpaRepository<ArtistaModel, UUID> {
-    boolean existsByUsuarioID(UUID usuarioId);
+    boolean existsByUsuarioId(UUID usuarioId);
     Optional<ArtistaModel> findByUsuarioId(UUID usuarioId);
 }
