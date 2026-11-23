@@ -1,6 +1,6 @@
 package com.nextune.usuario.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public record UsuarioResponse(
@@ -9,5 +9,5 @@ public record UsuarioResponse(
         String email,
         String fotoPerfil,
         String bio,
-        LocalDateTime dataCriacao
+        LocalDate dataCriacao
 ) {}
