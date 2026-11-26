@@ -16,6 +16,11 @@ import java.util.UUID;
 public interface PostRepository extends JpaRepository<PostModel, UUID> {
     Page<PostModel> findByArtistaIdOrderByDataPublicacaoDesc(UUID artistaId, Pageable pageable);
 
+    /**
+     * Posts dos gêneros que o usuário pontuou (maior pontuação primeiro), sem repetir o que ele já
+     * viu e sem os posts do próprio usuário. "excluidos" NUNCA pode ser vazio (NOT IN () é erro de SQL):
+     * o FeedService sempre inclui um UUID nulo como sentinela.
+     */
     @Query(value = """
         SELECT p.*
         FROM post p
@@ -28,13 +33,16 @@ public interface PostRepository extends JpaRepository<PostModel, UUID> {
               WHERE i.post_id = p.id AND i.usuario_id = :usuarioId)
           AND p.artista_id NOT IN (
               SELECT a.id FROM artista a WHERE a.usuario_id = :usuarioId)
+          AND p.id NOT IN (:excluidos)
         GROUP BY p.id
         ORDER BY MAX(pu.pontuacao) DESC, RAND()
         LIMIT :limite
         """, nativeQuery = true)
     List<PostModel> findRecomendados(@Param("usuarioId") UUID usuarioId,
+                                     @Param("excluidos") Collection<UUID> excluidos,
                                      @Param("limite") int limite);
 
+    /** Fallback aleatório (usuário novo ou poucas recomendações). "excluidos" também não pode ser vazio. */
     @Query(value = """
         SELECT p.*
         FROM post p

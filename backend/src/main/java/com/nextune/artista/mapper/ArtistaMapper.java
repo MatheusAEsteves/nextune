@@ -1,11 +1,12 @@
 package com.nextune.artista.mapper;
 
 import com.nextune.artista.dto.ArtistaResponse;
+import com.nextune.artista.dto.ArtistaResumoResponse;
 import com.nextune.artista.entity.ArtistaModel;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ArtistaMapper {
+public final class ArtistaMapper {
+
+    private ArtistaMapper() {}
 
     public static ArtistaResponse toResponse(ArtistaModel a) {
         return new ArtistaResponse(
@@ -13,4 +14,7 @@ public class ArtistaMapper {
                 a.getInstagramUrl(), a.getSpotifyUrl(), a.getYoutubeUrl());
     }
 
+    public static ArtistaResumoResponse toResumo(ArtistaModel a) {
+        return new ArtistaResumoResponse(a.getId(), a.getNomeArtistico());
+    }
 }
