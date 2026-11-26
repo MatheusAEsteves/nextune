@@ -1,0 +1,46 @@
+<main class="pagina">
+  <section class="painel">
+    <div class="marca">
+      <app-icone nome="musica" [tamanho]="36" />
+      <h1>Nextune</h1>
+    </div>
+    <p class="slogan">Descubra músicas e artistas independentes, um trecho por vez.</p>
+
+    <form (ngSubmit)="enviar()" novalidate>
+      @if (modo() === 'cadastrar') {
+        <div class="campo">
+          <label for="nome">Nome</label>
+          <input id="nome" name="nome" type="text" autocomplete="name" maxlength="150" [(ngModel)]="nome" />
+          @if (erroCampos()['nome']) { <span class="erro">{{ erroCampos()['nome'] }}</span> }
+        </div>
+      }
+
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input id="email" name="email" type="email" autocomplete="email" maxlength="150" [(ngModel)]="email" />
+        @if (erroCampos()['email']) { <span class="erro">{{ erroCampos()['email'] }}</span> }
+      </div>
+
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input id="senha" name="senha" type="password" maxlength="72"
+               [attr.autocomplete]="modo() === 'entrar' ? 'current-password' : 'new-password'"
+               [(ngModel)]="senha" />
+        @if (erroCampos()['senha']) { <span class="erro">{{ erroCampos()['senha'] }}</span> }
+      </div>
+
+      @if (erroGeral()) { <p class="erro geral" role="alert">{{ erroGeral() }}</p> }
+
+      <button class="btn btn-primario" type="submit" [disabled]="enviando()">
+        {{ enviando() ? 'Aguarde...' : modo() === 'entrar' ? 'Entrar' : 'Criar conta' }}
+      </button>
+    </form>
+
+    <p class="troca">
+      {{ modo() === 'entrar' ? 'Ainda não tem conta?' : 'Já tem conta?' }}
+      <button type="button" class="link" (click)="trocarModo()">
+        {{ modo() === 'entrar' ? 'Cadastre-se' : 'Entrar' }}
+      </button>
+    </p>
+  </section>
+</main>
