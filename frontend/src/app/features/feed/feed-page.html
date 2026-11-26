@@ -1,0 +1,97 @@
+<audio #audio loop preload="auto"
+       (timeupdate)="aoAtualizarTempo()"
+       (loadedmetadata)="aoAtualizarTempo()"
+       (play)="tocando.set(true)"
+       (pause)="tocando.set(false)"></audio>
+
+<div class="pagina">
+  <div class="feed" role="feed" aria-label="Feed de músicas">
+    @for (post of posts(); track post.id; let i = $index) {
+      @let curtido = !!curtidos()[post.id];
+      @let salvo = !!salvos()[post.id];
+
+      <section class="item" #card [attr.data-indice]="i" [attr.aria-label]="post.titulo">
+        <article class="cartao" (click)="aoClicarCartao(i)">
+          <img class="capa" [src]="api.midiaUrl(post.capa)" [alt]="'Capa de ' + post.titulo" draggable="false" />
+          <div class="degrade"></div>
+
+          @if (i === indiceAtivo() && !tocando()) {
+            <div class="pausado"><app-icone nome="play" [tamanho]="64" /></div>
+          }
+
+          <div class="info">
+            <div class="linha-artista">
+              <strong class="artista">{{ post.artista.nomeArtistico }}</strong>
+              <button type="button" class="seguir" [class.ativo]="estaSeguindo(post)"
+                      (click)="alternarSeguir($event, post)">
+                {{ estaSeguindo(post) ? 'Seguindo' : 'Seguir' }}
+              </button>
+            </div>
+            <h2 class="titulo">{{ post.titulo }}</h2>
+            @if (post.descricao) { <p class="descricao">{{ post.descricao }}</p> }
+            <div class="generos">
+              @for (g of post.generos; track g.id) { <span>{{ g.nome }}</span> }
+            </div>
+          </div>
+
+          <div class="barra" (click)="buscar($event, i)" aria-hidden="true">
+            <div class="trilho">
+              <div class="preenchimento" [style.width.%]="i === indiceAtivo() ? progresso() * 100 : 0"></div>
+            </div>
+          </div>
+        </article>
+
+        <div class="acoes">
+          <button type="button" class="acao" [class.ativo]="curtido" [attr.aria-pressed]="curtido"
+                  aria-label="Curtir" (click)="alternarCurtida(post)">
+            <span class="bolha"><app-icone nome="coracao" [preenchido]="curtido" /></span>
+            <span>{{ totalCurtidas(post) }}</span>
+          </button>
+          <button type="button" class="acao" [class.ativo]="salvo" [attr.aria-pressed]="salvo"
+                  aria-label="Salvar" (click)="alternarSalvo(post)">
+            <span class="bolha"><app-icone nome="salvar" [preenchido]="salvo" /></span>
+            <span>Salvar</span>
+          </button>
+          <a class="acao" [href]="post.linkMusica" target="_blank" rel="noopener noreferrer"
+             aria-label="Ouvir a música completa">
+            <span class="bolha"><app-icone nome="link" /></span>
+            <span>Completa</span>
+          </a>
+          <button type="button" class="acao" [attr.aria-pressed]="mudo()" aria-label="Som" (click)="alternarMudo()">
+            <span class="bolha"><app-icone [nome]="mudo() ? 'mudo' : 'volume'" /></span>
+            <span>{{ mudo() ? 'Mudo' : 'Som' }}</span>
+          </button>
+        </div>
+      </section>
+    }
+
+    @if (posts().length === 0 && carregando()) {
+      <section class="item"><div class="estado">Carregando suas músicas...</div></section>
+    } @else if (fim()) {
+      <section class="item">
+        <div class="estado">
+          <strong>{{ posts().length === 0 ? 'Ainda não há músicas por aqui' : 'Você ouviu tudo por agora' }}</strong>
+          <span>Volte mais tarde: novos artistas publicam o tempo todo.</span>
+        </div>
+      </section>
+    }
+  </div>
+
+  <div class="navegacao">
+    <button type="button" class="nav" aria-label="Música anterior"
+            [disabled]="indiceAtivo() === 0" (click)="irPara(indiceAtivo() - 1)">
+      <app-icone nome="cima" />
+    </button>
+    <button type="button" class="nav" aria-label="Próxima música"
+            [disabled]="indiceAtivo() >= posts().length - 1" (click)="irPara(indiceAtivo() + 1)">
+      <app-icone nome="baixo" />
+    </button>
+  </div>
+
+  @if (erro()) {
+    <div class="aviso" role="alert">
+      <span>{{ erro() }}</span>
+      <button type="button" (click)="carregarMais()">Tentar de novo</button>
+    </div>
+  }
+</div>
