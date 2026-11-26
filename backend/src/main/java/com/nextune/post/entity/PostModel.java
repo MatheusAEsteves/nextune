@@ -3,10 +3,11 @@ package com.nextune.post.entity;
 import com.nextune.artista.entity.ArtistaModel;
 import com.nextune.genero.entity.GeneroModel;
 import jakarta.persistence.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -36,13 +37,14 @@ public class PostModel {
     private String linkMusica;
 
     @Column(name = "data_publicacao", nullable = false, updatable = false)
-    private LocalDate dataPublicacao;
+    private LocalDateTime dataPublicacao;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "artista_id", nullable = false, updatable = false)
     private ArtistaModel artista;
 
     @ManyToMany
+    @BatchSize(size = 50)
     @JoinTable(
             name = "post_has_genero",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -60,7 +62,7 @@ public class PostModel {
         this.arquivoAudio = arquivoAudio;
         this.capa = capa;
         this.linkMusica = linkMusica;
-        this.dataPublicacao = LocalDate.now();
+        this.dataPublicacao = LocalDateTime.now();
     }
 
     public UUID getId() { return id; }
@@ -69,7 +71,7 @@ public class PostModel {
     public String getArquivoAudio() { return arquivoAudio; }
     public String getCapa() { return capa; }
     public String getLinkMusica() { return linkMusica; }
-    public LocalDate getDataPublicacao() { return dataPublicacao; }
+    public LocalDateTime getDataPublicacao() { return dataPublicacao; }
     public ArtistaModel getArtista() { return artista; }
     public Set<GeneroModel> getGeneros() { return generos; }
 

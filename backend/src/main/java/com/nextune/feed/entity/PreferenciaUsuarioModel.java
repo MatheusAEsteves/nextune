@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -32,8 +32,9 @@ public class PreferenciaUsuarioModel {
     @Column(nullable = false)
     private int pontuacao = 0;
 
-    @Column(name = "data_atualizacao", nullable = false, insertable = false, updatable = false)
-    private LocalDate dataAtualizacao;
+    // Coluna NOT NULL sem default no banco: preenchida aqui, não pelo MySQL.
+    @Column(name = "data_atualizacao", nullable = false)
+    private LocalDateTime dataAtualizacao;
 
     protected PreferenciaUsuarioModel() {}
 
@@ -43,11 +44,24 @@ public class PreferenciaUsuarioModel {
         this.pontuacao = pontuacao;
     }
 
+    @PrePersist
+    @PreUpdate
+    protected void marcarAtualizacao() {
+        this.dataAtualizacao = LocalDateTime.now();
+    }
+
     public UUID getId() { return id; }
     public UsuarioModel getUsuario() { return usuario; }
     public GeneroModel getGenero() { return genero; }
     public int getPontuacao() { return pontuacao; }
-    public LocalDate getDataAtualizacao() { return dataAtualizacao; }
+    public LocalDateTime getDataAtualizacao() { return dataAtualizacao; }
 
     public void adicionarPontos(int pontos) { this.pontuacao += pontos; }
+
+    /** Garante que o gênero conte como "gostado" (pontuação positiva) sem diminuir quem já tem mais. */
+    public void garantirPontuacaoMinima(int minimo) {
+        if (this.pontuacao < minimo) {
+            this.pontuacao = minimo;
+        }
+    }
 }

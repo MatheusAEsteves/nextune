@@ -2,7 +2,9 @@ package com.nextune.artista.controller;
 
 import com.nextune.artista.dto.ArtistaRequest;
 import com.nextune.artista.dto.ArtistaResponse;
+import com.nextune.artista.dto.ArtistaUpdateRequest;
 import com.nextune.artista.service.ArtistaService;
+import com.nextune.common.security.UsuarioLogado;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,29 +16,29 @@ import java.util.UUID;
 public class ArtistaController {
 
     private final ArtistaService artistaService;
+    private final UsuarioLogado usuarioLogado;
 
-    public ArtistaController(ArtistaService artistaService) {
+    public ArtistaController(ArtistaService artistaService, UsuarioLogado usuarioLogado) {
         this.artistaService = artistaService;
+        this.usuarioLogado = usuarioLogado;
     }
 
-    // PROVISÓRIO: usuarioId virá do token
+    /** Transforma o usuário logado em artista. */
     @PostMapping("/ativar")
     @ResponseStatus(HttpStatus.CREATED)
-    public ArtistaResponse ativar(@RequestParam UUID usuarioId,
-                                  @Valid @RequestBody ArtistaRequest req) {
-        return artistaService.ativar(usuarioId, req);
+    public ArtistaResponse ativar(@Valid @RequestBody ArtistaRequest req) {
+        return artistaService.ativar(usuarioLogado.id(), req);
     }
 
-    // PROVISÓRIO: usuarioId virá do token. Devolve 404 se o usuário não é artista.
+    /** Perfil de artista do usuário logado. Devolve 404 se ele ainda não é artista. */
     @GetMapping("/me")
-    public ArtistaResponse meuPerfil(@RequestParam UUID usuarioId) {
-        return artistaService.buscarPorUsuario(usuarioId);
+    public ArtistaResponse meuPerfil() {
+        return artistaService.buscarPorUsuario(usuarioLogado.id());
     }
 
     @PutMapping("/me")
-    public ArtistaResponse atualizar(@RequestParam UUID usuarioId,
-                                     @Valid @RequestBody ArtistaRequest req) {
-        return artistaService.atualizar(usuarioId, req);
+    public ArtistaResponse atualizar(@Valid @RequestBody ArtistaUpdateRequest req) {
+        return artistaService.atualizar(usuarioLogado.id(), req);
     }
 
     @GetMapping("/{id}")

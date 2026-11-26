@@ -15,9 +15,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                // usa as origens liberadas em WebConfig (nextune.cors.allowed-origins)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()      // preflight do navegador
                         .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()   // cadastro
                         .requestMatchers(HttpMethod.GET, "/generos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()  // <audio> e <img> não enviam o login
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())

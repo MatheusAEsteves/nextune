@@ -2,6 +2,7 @@ package com.nextune.artista.entity;
 
 import com.nextune.usuario.entity.UsuarioModel;
 import jakarta.persistence.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "artista")
+@BatchSize(size = 50)
 public class ArtistaModel {
 
     @Id

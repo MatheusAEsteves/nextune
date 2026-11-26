@@ -2,9 +2,11 @@ package com.nextune.artista.service;
 
 import com.nextune.artista.dto.ArtistaRequest;
 import com.nextune.artista.dto.ArtistaResponse;
+import com.nextune.artista.dto.ArtistaUpdateRequest;
 import com.nextune.artista.entity.ArtistaModel;
 import com.nextune.artista.mapper.ArtistaMapper;
 import com.nextune.artista.repository.ArtistaRepository;
+import com.nextune.common.validation.Validacoes;
 import com.nextune.usuario.entity.UsuarioModel;
 import com.nextune.usuario.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
@@ -36,8 +38,11 @@ public class ArtistaService {
         }
 
         ArtistaModel artista = new ArtistaModel(
-                usuario, req.nomeArtistico().trim(),
-                req.instagramUrl(), req.spotifyUrl(), req.youtubeUrl());
+                usuario,
+                Validacoes.textoObrigatorio(req.nomeArtistico(), "nomeArtistico", 100),
+                Validacoes.urlHttpOpcional(req.instagramUrl(), "instagramUrl"),
+                Validacoes.urlHttpOpcional(req.spotifyUrl(), "spotifyUrl"),
+                Validacoes.urlHttpOpcional(req.youtubeUrl(), "youtubeUrl"));
 
         return ArtistaMapper.toResponse(artistaRepository.save(artista));
     }
@@ -54,15 +59,24 @@ public class ArtistaService {
                 .orElseThrow(() -> naoEncontrado()));
     }
 
+    /** Atualização parcial: null = mantém; texto vazio = apaga o link. */
     @Transactional
-    public ArtistaResponse atualizar(UUID usuarioId, ArtistaRequest req) {
+    public ArtistaResponse atualizar(UUID usuarioId, ArtistaUpdateRequest req) {
         ArtistaModel artista = artistaRepository.findByUsuarioId(usuarioId)
                 .orElseThrow(() -> naoEncontrado());
 
-        artista.setNomeArtistico(req.nomeArtistico().trim());
-        artista.setInstagramUrl(req.instagramUrl());
-        artista.setSpotifyUrl(req.spotifyUrl());
-        artista.setYoutubeUrl(req.youtubeUrl());
+        if (req.nomeArtistico() != null) {
+            artista.setNomeArtistico(Validacoes.textoObrigatorio(req.nomeArtistico(), "nomeArtistico", 100));
+        }
+        if (req.instagramUrl() != null) {
+            artista.setInstagramUrl(Validacoes.urlHttpOpcional(req.instagramUrl(), "instagramUrl"));
+        }
+        if (req.spotifyUrl() != null) {
+            artista.setSpotifyUrl(Validacoes.urlHttpOpcional(req.spotifyUrl(), "spotifyUrl"));
+        }
+        if (req.youtubeUrl() != null) {
+            artista.setYoutubeUrl(Validacoes.urlHttpOpcional(req.youtubeUrl(), "youtubeUrl"));
+        }
 
         return ArtistaMapper.toResponse(artista);
     }
