@@ -1,0 +1,30 @@
+<main class="pagina">
+  <section class="painel">
+    <h1>O que você curte?</h1>
+    <p class="sub">
+      Escolha pelo menos {{ minimo }} gêneros. Vamos mostrar músicas parecidas, e também algumas surpresas.
+    </p>
+
+    @if (carregando()) {
+      <p class="sub">Carregando gêneros...</p>
+    } @else {
+      <div class="chips">
+        @for (g of generos(); track g.id) {
+          <button type="button" class="chip" [class.ativo]="escolhidos().includes(g.id)"
+                  [attr.aria-pressed]="escolhidos().includes(g.id)" (click)="alternar(g.id)">
+            {{ g.nome }}
+          </button>
+        }
+      </div>
+    }
+
+    @if (erro()) { <p class="erro" role="alert">{{ erro() }}</p> }
+
+    <div class="rodape">
+      <span class="contador">{{ escolhidos().length }} selecionado(s)</span>
+      <button class="btn btn-primario" type="button" [disabled]="!podeContinuar() || enviando()" (click)="continuar()">
+        {{ enviando() ? 'Salvando...' : 'Continuar' }}
+      </button>
+    </div>
+  </section>
+</main>
