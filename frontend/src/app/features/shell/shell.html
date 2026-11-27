@@ -1,0 +1,30 @@
+<div class="layout">
+  <aside class="lateral">
+    <a class="logo" routerLink="/">
+      <app-icone nome="musica" [tamanho]="28" />
+      <span>Nextune</span>
+    </a>
+
+    <nav aria-label="Principal">
+      <a routerLink="/" routerLinkActive="ativo" [routerLinkActiveOptions]="{ exact: true }">
+        <app-icone nome="inicio" />
+        <span>Para você</span>
+      </a>
+    </nav>
+
+    <div class="rodape">
+      <div class="usuario">
+        <span class="avatar">{{ inicial() }}</span>
+        <span class="nome">{{ auth.usuario()?.nome }}</span>
+      </div>
+      <button type="button" class="sair" (click)="sair()">
+        <app-icone nome="sair" />
+        <span>Sair</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="conteudo">
+    <router-outlet />
+  </main>
+</div>
