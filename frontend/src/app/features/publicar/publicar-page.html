@@ -1,0 +1,67 @@
+<div class="rolavel">
+  <div class="container">
+    <h1 class="titulo-pagina">Publicar música</h1>
+
+    @if (auth.artista() === undefined) {
+      <p class="vazio">Carregando...</p>
+    } @else if (auth.artista() === null) {
+      <div class="cartao-ui bloqueio">
+        <p>Para publicar músicas, ative primeiro o seu perfil de artista.</p>
+        <a class="btn btn-primario btn-pequeno" routerLink="/estudio">Quero ser artista</a>
+      </div>
+    } @else {
+      <form class="cartao-ui form" (ngSubmit)="publicar()">
+        <div class="campo">
+          <label for="titulo">Título</label>
+          <input id="titulo" name="titulo" type="text" maxlength="150" [(ngModel)]="titulo" />
+          @if (erroCampos()['titulo']) { <span class="erro">{{ erroCampos()['titulo'] }}</span> }
+        </div>
+
+        <div class="campo">
+          <label for="descricao">Descrição (opcional)</label>
+          <textarea id="descricao" name="descricao" rows="3" maxlength="5000" [(ngModel)]="descricao"></textarea>
+        </div>
+
+        <div class="campo">
+          <label for="link">Link da música completa</label>
+          <input id="link" name="link" type="url" maxlength="255" placeholder="https://open.spotify.com/track/..." [(ngModel)]="linkMusica" />
+          <span class="ajuda">Para onde o ouvinte vai ao tocar em "Completa" (Spotify, YouTube etc.).</span>
+          @if (erroCampos()['linkMusica']) { <span class="erro">{{ erroCampos()['linkMusica'] }}</span> }
+        </div>
+
+        <div class="campo">
+          <label>Gêneros (de 1 a 5)</label>
+          <app-seletor-generos [generos]="generos()" [maximo]="5" [(selecionados)]="generoIds" />
+          @if (erroCampos()['generoIds']) { <span class="erro">{{ erroCampos()['generoIds'] }}</span> }
+        </div>
+
+        <div class="arquivos">
+          <div class="campo">
+            <label for="audio">Trecho de áudio</label>
+            <input id="audio" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac" (change)="escolherAudio($event)" />
+            <span class="ajuda">mp3, wav, ogg, m4a, aac ou flac, até 20 MB.</span>
+            @if (audio(); as a) { <span class="ajuda">Selecionado: {{ a.name }}</span> }
+            @if (erroCampos()['audio']) { <span class="erro">{{ erroCampos()['audio'] }}</span> }
+          </div>
+
+          <div class="campo">
+            <label for="capa">Capa</label>
+            <input id="capa" type="file" accept="image/jpeg,image/png,image/webp" (change)="escolherCapa($event)" />
+            <span class="ajuda">jpg, png ou webp, até 5 MB. Quadrada fica melhor.</span>
+            @if (erroCampos()['capa']) { <span class="erro">{{ erroCampos()['capa'] }}</span> }
+            @if (previaCapa(); as url) { <img class="previa" [src]="url" alt="Prévia da capa" /> }
+          </div>
+        </div>
+
+        @if (erroGeral()) { <p class="erro" role="alert">{{ erroGeral() }}</p> }
+
+        <div class="linha">
+          <button class="btn btn-primario" type="submit" [disabled]="enviando()">
+            <app-icone nome="enviar" [tamanho]="18" />
+            {{ enviando() ? 'Enviando...' : 'Publicar' }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="rolavel">
+  <div class="container">
+    @if (erro()) {
+      <p class="vazio aviso-erro">{{ erro() }}</p>
+    } @else if (post(); as p) {
+      <section class="detalhe">
+        <img class="capa" [src]="api.midiaUrl(p.capa)" [alt]="'Capa de ' + p.titulo" />
+
+        <div class="info">
+          <h1>{{ p.titulo }}</h1>
+          <a class="artista" [routerLink]="['/artista', p.artista.id]">{{ p.artista.nomeArtistico }}</a>
+
+          <div class="chips">
+            @for (g of p.generos; track g.id) { <span class="genero">{{ g.nome }}</span> }
+          </div>
+
+          @if (p.descricao) { <p class="descricao">{{ p.descricao }}</p> }
+
+          <audio controls preload="metadata" [src]="api.midiaUrl(p.arquivoAudio) ?? ''"></audio>
+
+          <div class="linha acoes">
+            <button type="button" class="btn btn-secundario btn-pequeno" [class.ativo]="curtido()"
+                    [attr.aria-pressed]="curtido()" (click)="alternarCurtida()">
+              <app-icone nome="coracao" [tamanho]="18" [preenchido]="curtido()" /> {{ totalCurtidas() }}
+            </button>
+            <button type="button" class="btn btn-secundario btn-pequeno" [class.ativo]="salvo()"
+                    [attr.aria-pressed]="salvo()" (click)="alternarSalvo()">
+              <app-icone nome="salvar" [tamanho]="18" [preenchido]="salvo()" /> {{ salvo() ? 'Salvo' : 'Salvar' }}
+            </button>
+            <a class="btn btn-secundario btn-pequeno" [href]="p.linkMusica" target="_blank" rel="noopener noreferrer">
+              <app-icone nome="link" [tamanho]="18" /> Ouvir completa
+            </a>
+          </div>
+
+          <div class="linha acoes">
+            @if (ehDono()) {
+              <a class="btn btn-secundario btn-pequeno" [routerLink]="['/post', p.id, 'editar']">
+                <app-icone nome="editar" [tamanho]="16" /> Editar
+              </a>
+            } @else {
+              <button type="button" class="btn btn-secundario btn-pequeno" (click)="denunciando.set(true)">
+                <app-icone nome="bandeira" [tamanho]="16" /> Denunciar
+              </button>
+            }
+            @if (podeExcluir()) {
+              <button type="button" class="btn btn-perigo btn-pequeno" (click)="excluir()">
+                <app-icone nome="lixeira" [tamanho]="16" /> Excluir
+              </button>
+            }
+          </div>
+        </div>
+      </section>
+
+      <app-comentarios-painel [postId]="p.id" [embutido]="true" />
+
+      @if (denunciando()) {
+        <app-denuncia-dialogo [postId]="p.id" (fechar)="denunciando.set(false)" />
+      }
+    } @else {
+      <p class="vazio">Carregando...</p>
+    }
+  </div>
+</div>

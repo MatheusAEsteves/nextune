@@ -1,0 +1,11 @@
+.fundo {
+  position: fixed; inset: 0; z-index: 50; display: grid; place-items: center;
+  background: rgba(0, 0, 0, .65); padding: 1rem;
+}
+.dialogo {
+  width: 100%; max-width: 440px; background: var(--surface); border: 1px solid var(--borda);
+  border-radius: 20px; padding: 1.5rem;
+}
+h2 { margin: 0 0 1rem; font-size: 1.2rem; }
+.texto { color: var(--muted); line-height: 1.45; }
+.acoes { display: flex; justify-content: flex-end; gap: .6rem; margin-top: .5rem; }

@@ -1,0 +1,5 @@
+.bloqueio { display: grid; gap: 1rem; justify-items: start; }
+.bloqueio p { margin: 0; color: var(--muted); }
+.arquivos { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
+.previa { width: 140px; aspect-ratio: 1; object-fit: cover; border-radius: 12px; margin-top: .5rem; }
+@media (max-width: 700px) { .arquivos { grid-template-columns: 1fr; } }

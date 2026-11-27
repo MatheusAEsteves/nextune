@@ -1,0 +1,78 @@
+<div class="rolavel">
+  <div class="container">
+    @if (auth.artista() === undefined) {
+      <p class="vazio">Carregando...</p>
+    } @else {
+      @let artista = auth.artista();
+
+      <h1 class="titulo-pagina">{{ artista ? 'Meu estúdio' : 'Quero ser artista' }}</h1>
+      @if (!artista) {
+        <p class="intro">
+          Ative seu perfil de artista para publicar trechos das suas músicas e ser descoberto por quem ouve.
+          É só informar o nome artístico; os links são opcionais.
+        </p>
+      }
+
+      <form class="cartao-ui form" (ngSubmit)="salvar()">
+        <div class="campo">
+          <label for="nomeArtistico">Nome artístico</label>
+          <input id="nomeArtistico" name="nomeArtistico" type="text" maxlength="100" [(ngModel)]="nomeArtistico" />
+          @if (erroCampos()['nomeArtistico']) { <span class="erro">{{ erroCampos()['nomeArtistico'] }}</span> }
+        </div>
+        <div class="campo">
+          <label for="instagram">Instagram</label>
+          <input id="instagram" name="instagram" type="url" maxlength="255" placeholder="https://instagram.com/seuperfil" [(ngModel)]="instagram" />
+          @if (erroCampos()['instagramUrl']) { <span class="erro">{{ erroCampos()['instagramUrl'] }}</span> }
+        </div>
+        <div class="campo">
+          <label for="spotify">Spotify</label>
+          <input id="spotify" name="spotify" type="url" maxlength="255" placeholder="https://open.spotify.com/artist/..." [(ngModel)]="spotify" />
+          @if (erroCampos()['spotifyUrl']) { <span class="erro">{{ erroCampos()['spotifyUrl'] }}</span> }
+        </div>
+        <div class="campo">
+          <label for="youtube">YouTube</label>
+          <input id="youtube" name="youtube" type="url" maxlength="255" placeholder="https://youtube.com/@seucanal" [(ngModel)]="youtube" />
+          @if (erroCampos()['youtubeUrl']) { <span class="erro">{{ erroCampos()['youtubeUrl'] }}</span> }
+        </div>
+
+        @if (erroGeral()) { <p class="erro" role="alert">{{ erroGeral() }}</p> }
+        @if (mensagem()) { <p class="ok" role="status">{{ mensagem() }}</p> }
+
+        <div class="linha">
+          <button class="btn btn-primario btn-pequeno" type="submit" [disabled]="salvando()">
+            {{ salvando() ? 'Salvando...' : artista ? 'Salvar alterações' : 'Ativar perfil de artista' }}
+          </button>
+          @if (artista) {
+            <a class="btn btn-secundario btn-pequeno" [routerLink]="['/artista', artista.id]">Ver perfil público</a>
+          }
+        </div>
+      </form>
+
+      @if (artista) {
+        <section class="musicas">
+          <div class="cabecalho">
+            <h2>Minhas músicas</h2>
+            <a class="btn btn-primario btn-pequeno" routerLink="/publicar">
+              <app-icone nome="mais" [tamanho]="16" /> Publicar música
+            </a>
+          </div>
+
+          @if (posts.itens().length > 0) {
+            <app-post-grade [posts]="posts.itens()" [mostrarArtista]="false" />
+          } @else if (posts.carregando()) {
+            <p class="vazio">Carregando...</p>
+          } @else if (posts.iniciada() && !posts.erro()) {
+            <p class="vazio">Você ainda não publicou nenhuma música.</p>
+          }
+          @if (posts.erro()) { <p class="vazio aviso-erro">{{ posts.erro() }}</p> }
+          @if (posts.temMais() && posts.iniciada() && posts.itens().length > 0) {
+            <p class="linha" style="justify-content: center; margin-top: 1.5rem">
+              <button type="button" class="btn btn-secundario btn-pequeno" [disabled]="posts.carregando()"
+                      (click)="posts.carregarMais()">Carregar mais</button>
+            </p>
+          }
+        </section>
+      }
+    }
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="rolavel">
+  <div class="container">
+    @if (erro()) {
+      <p class="vazio aviso-erro">{{ erro() }}</p>
+    } @else if (artista(); as a) {
+      <header class="cabecalho">
+        <app-avatar [nome]="a.nomeArtistico" [foto]="dono()?.fotoPerfil" [tamanho]="112" />
+        <div class="dados">
+          <h1>{{ a.nomeArtistico }}</h1>
+          @if (seguidores(); as s) {
+            <p class="meta">{{ s.total }} {{ s.total === 1 ? 'seguidor' : 'seguidores' }}</p>
+          }
+          @if (dono()?.bio) { <p class="bio">{{ dono()?.bio }}</p> }
+
+          <div class="linha">
+            @if (ehMeu()) {
+              <a class="btn btn-secundario btn-pequeno" routerLink="/estudio">Editar meu estúdio</a>
+            } @else {
+              @if (seguidores(); as s) {
+                <button type="button" class="btn btn-pequeno" [class.btn-primario]="!s.seguindo"
+                        [class.btn-secundario]="s.seguindo" (click)="alternarSeguir()">
+                  {{ s.seguindo ? 'Seguindo' : 'Seguir' }}
+                </button>
+              }
+              <button type="button" class="btn btn-secundario btn-pequeno" (click)="denunciando.set(true)">
+                <app-icone nome="bandeira" [tamanho]="16" /> Denunciar
+              </button>
+            }
+          </div>
+
+          <div class="linha links">
+            @if (a.instagramUrl) { <a class="chip" [href]="a.instagramUrl" target="_blank" rel="noopener noreferrer">Instagram</a> }
+            @if (a.spotifyUrl) { <a class="chip" [href]="a.spotifyUrl" target="_blank" rel="noopener noreferrer">Spotify</a> }
+            @if (a.youtubeUrl) { <a class="chip" [href]="a.youtubeUrl" target="_blank" rel="noopener noreferrer">YouTube</a> }
+          </div>
+        </div>
+      </header>
+
+      <h2 class="secao">Músicas</h2>
+      @if (posts.itens().length > 0) {
+        <app-post-grade [posts]="posts.itens()" [mostrarArtista]="false" />
+      } @else if (posts.carregando()) {
+        <p class="vazio">Carregando...</p>
+      } @else if (posts.iniciada()) {
+        <p class="vazio">Este artista ainda não publicou músicas.</p>
+      }
+      @if (posts.erro()) { <p class="vazio aviso-erro">{{ posts.erro() }}</p> }
+      @if (posts.temMais() && posts.iniciada() && posts.itens().length > 0) {
+        <p class="linha centro">
+          <button type="button" class="btn btn-secundario btn-pequeno" [disabled]="posts.carregando()"
+                  (click)="posts.carregarMais()">Carregar mais</button>
+        </p>
+      }
+    } @else {
+      <p class="vazio">Carregando artista...</p>
+    }
+  </div>
+</div>
+
+@if (denunciando()) {
+  <app-denuncia-dialogo [artistaId]="id()" (fechar)="denunciando.set(false)" />
+}

@@ -2,10 +2,13 @@ import {
   ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit,
   effect, inject, signal, viewChild, viewChildren,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { InteracaoRequest, Post, Seguidores } from '../../core/models/api.models';
 import { ApiService } from '../../core/services/api.service';
 import { mensagemDeErro } from '../../core/util/erros';
+import { ComentariosPainel } from '../../shared/components/comentarios-painel';
+import { DenunciaDialogo } from '../../shared/components/denuncia-dialogo';
 import { Icone } from '../../shared/components/icone';
 
 const POR_LOTE = 10;
@@ -20,7 +23,7 @@ const FRACAO_VISIVEL = 0.6; // o card vira o "ativo" quando 60% dele aparece
  */
 @Component({
   selector: 'app-feed-page',
-  imports: [Icone],
+  imports: [Icone, RouterLink, ComentariosPainel, DenunciaDialogo],
   templateUrl: './feed-page.html',
   styleUrl: './feed-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,6 +46,8 @@ export class FeedPage implements OnInit, OnDestroy {
   protected readonly curtidos = signal<Record<string, boolean>>({});
   protected readonly salvos = signal<Record<string, boolean>>({});
   protected readonly seguidores = signal<Record<string, Seguidores>>({});
+  protected readonly comentariosDe = signal<Post | null>(null); // gaveta de comentários aberta para este post
+  protected readonly denunciando = signal<Post | null>(null);
 
   private readonly observador: IntersectionObserver;
   private idAtivo: string | null = null;
@@ -107,6 +112,7 @@ export class FeedPage implements OnInit, OnDestroy {
     this.encerrarAtual();
     this.idAtivo = post.id;
     this.indiceAtivo.set(indice);
+    if (this.comentariosDe()) this.comentariosDe.set(post); // gaveta acompanha a música da tela
     this.tocar(post);
     this.prepararProximo(indice + 1);
     void this.carregarSeguidores(post);
@@ -249,12 +255,19 @@ export class FeedPage implements OnInit, OnDestroy {
     chamada.subscribe({ error: () => this.seguidores.update((m) => ({ ...m, [id]: atual })) });
   }
 
+  // ---------- comentários e denúncia ----------
+
+  protected alternarComentarios(post: Post): void {
+    this.comentariosDe.update((atual) => (atual ? null : post));
+  }
+
   // ---------- teclado ----------
 
   aoTeclar(e: KeyboardEvent): void {
     const alvo = e.target as HTMLElement | null;
     if (alvo?.closest('input, textarea, select, [contenteditable]')) return;
     if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (this.denunciando()) return; // a janela de denúncia cuida do próprio teclado
 
     const post = this.posts()[this.indiceAtivo()];
     switch (e.key) {
@@ -282,6 +295,13 @@ export class FeedPage implements OnInit, OnDestroy {
       case 'm':
       case 'M':
         this.alternarMudo();
+        break;
+      case 'c':
+      case 'C':
+        if (post) this.alternarComentarios(post);
+        break;
+      case 'Escape':
+        this.comentariosDe.set(null);
         break;
     }
   }

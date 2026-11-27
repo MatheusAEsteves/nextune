@@ -82,3 +82,26 @@
 .aviso button { color: var(--accent); font-weight: 600; }
 
 @media (max-width: 900px) { .navegacao { display: none; } }
+
+/* nome do artista como link */
+.artista { color: #fff; text-decoration: none; }
+.artista:hover { text-decoration: underline; }
+
+/* gaveta de comentários: o feed encolhe para dar espaço */
+.gaveta {
+  position: absolute; inset: 0 0 0 auto; width: 380px; z-index: 3;
+  border-left: 1px solid var(--borda);
+}
+.pagina.com-gaveta .feed { width: calc(100% - 380px); }
+.pagina.com-gaveta .navegacao { right: calc(380px + 1.5rem); }
+
+/* telas baixas: botões só com ícone */
+@media (max-height: 780px) {
+  .acoes { gap: .55rem; }
+  .acao > span:last-child { display: none; }
+  .bolha { width: 44px; height: 44px; }
+}
+@media (max-width: 900px) {
+  .gaveta { width: 100%; }
+  .pagina.com-gaveta .feed { width: 100%; }
+}

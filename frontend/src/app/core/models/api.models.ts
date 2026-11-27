@@ -74,3 +74,75 @@ export interface ErroApi {
   mensagem: string;
   campos?: Record<string, string>;
 }
+
+export interface Artista {
+  id: string;
+  usuarioId: string;
+  nomeArtistico: string;
+  instagramUrl: string | null;
+  spotifyUrl: string | null;
+  youtubeUrl: string | null;
+}
+
+export interface UsuarioPublico {
+  id: string;
+  nome: string;
+  fotoPerfil: string | null;
+  bio: string | null;
+  dataCriacao: string;
+}
+
+export interface Autor {
+  id: string;
+  nome: string;
+  fotoPerfil: string | null;
+}
+
+export interface Comentario {
+  id: string;
+  postId: string;
+  autor: Autor;
+  conteudo: string;
+  dataComentario: string;
+}
+
+export type DenunciaStatus = 'PENDENTE' | 'ANALISADA' | 'RESOLVIDA';
+
+export interface Denuncia {
+  id: string;
+  usuarioId: string;
+  postId: string | null;
+  artistaId: string | null;
+  motivo: string;
+  descricao: string | null;
+  status: DenunciaStatus;
+  dataDenuncia: string;
+}
+
+export interface DenunciaRequest {
+  postId?: string;
+  artistaId?: string;
+  motivo: string;
+  descricao?: string;
+}
+
+/** Atualização parcial do perfil: ausente = mantém, "" = apaga (bio, fotoPerfil). */
+export interface PerfilUpdate {
+  nome?: string;
+  bio?: string;
+  fotoPerfil?: string;
+}
+
+export interface ArtistaWrite {
+  nomeArtistico: string;
+  instagramUrl: string | null;
+  spotifyUrl: string | null;
+  youtubeUrl: string | null;
+}
+
+export interface PostUpdate {
+  titulo?: string;
+  descricao?: string;
+  linkMusica?: string;
+  generoIds?: number[];
+}

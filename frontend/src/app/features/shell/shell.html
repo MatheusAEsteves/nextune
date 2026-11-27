@@ -7,19 +7,42 @@
 
     <nav aria-label="Principal">
       <a routerLink="/" routerLinkActive="ativo" [routerLinkActiveOptions]="{ exact: true }">
-        <app-icone nome="inicio" />
-        <span>Para você</span>
+        <app-icone nome="inicio" /><span>Para você</span>
+      </a>
+      <a routerLink="/curtidas" routerLinkActive="ativo">
+        <app-icone nome="coracao" /><span>Curtidas</span>
+      </a>
+      <a routerLink="/salvos" routerLinkActive="ativo">
+        <app-icone nome="salvar" /><span>Salvos</span>
       </a>
     </nav>
 
+    @if (auth.artista() !== undefined) {
+      <nav aria-label="Artista">
+        <p class="grupo">Artista</p>
+        @if (auth.artista()) {
+          <a routerLink="/estudio" routerLinkActive="ativo"><app-icone nome="microfone" /><span>Meu estúdio</span></a>
+          <a routerLink="/publicar" routerLinkActive="ativo"><app-icone nome="mais" /><span>Publicar música</span></a>
+        } @else {
+          <a routerLink="/estudio" routerLinkActive="ativo"><app-icone nome="microfone" /><span>Quero ser artista</span></a>
+        }
+      </nav>
+    }
+
+    @if (auth.admin()) {
+      <nav aria-label="Administração">
+        <p class="grupo">Administração</p>
+        <a routerLink="/admin/denuncias" routerLinkActive="ativo"><app-icone nome="escudo" /><span>Denúncias</span></a>
+      </nav>
+    }
+
     <div class="rodape">
-      <div class="usuario">
-        <span class="avatar">{{ inicial() }}</span>
+      <a class="usuario" routerLink="/perfil" routerLinkActive="ativo" title="Meu perfil">
+        <app-avatar [nome]="auth.usuario()?.nome ?? ''" [foto]="auth.usuario()?.fotoPerfil" [tamanho]="36" />
         <span class="nome">{{ auth.usuario()?.nome }}</span>
-      </div>
+      </a>
       <button type="button" class="sair" (click)="sair()">
-        <app-icone nome="sair" />
-        <span>Sair</span>
+        <app-icone nome="sair" /><span>Sair</span>
       </button>
     </div>
   </aside>

@@ -1,0 +1,42 @@
+<div class="fundo" (click)="fechar.emit()">
+  <div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-denuncia" (click)="$event.stopPropagation()">
+    @if (enviada()) {
+      <h2 id="titulo-denuncia">Denúncia enviada</h2>
+      <p class="texto">Obrigado por avisar. Nossa equipe vai analisar o conteúdo.</p>
+      <div class="acoes">
+        <button type="button" class="btn btn-primario btn-pequeno" (click)="fechar.emit()">Fechar</button>
+      </div>
+    } @else {
+      <h2 id="titulo-denuncia">Denunciar {{ postId() ? 'música' : 'artista' }}</h2>
+      <form class="form" (ngSubmit)="enviar()">
+        <div class="campo">
+          <label for="motivo">Motivo</label>
+          <select id="motivo" name="motivo" [(ngModel)]="motivo">
+            @for (m of motivos; track m) { <option [value]="m">{{ m }}</option> }
+          </select>
+        </div>
+
+        @if (motivo() === 'Outro') {
+          <div class="campo">
+            <label for="outro">Qual o motivo?</label>
+            <input id="outro" name="outro" type="text" maxlength="100" [(ngModel)]="outro" />
+          </div>
+        }
+
+        <div class="campo">
+          <label for="descricao">Detalhes (opcional)</label>
+          <textarea id="descricao" name="descricao" rows="3" maxlength="2000" [(ngModel)]="descricao"></textarea>
+        </div>
+
+        @if (erro()) { <p class="erro" role="alert">{{ erro() }}</p> }
+
+        <div class="acoes">
+          <button type="button" class="btn btn-secundario btn-pequeno" (click)="fechar.emit()">Cancelar</button>
+          <button type="submit" class="btn btn-primario btn-pequeno" [disabled]="enviando()">
+            {{ enviando() ? 'Enviando...' : 'Enviar denúncia' }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

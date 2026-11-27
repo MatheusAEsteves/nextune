@@ -1,0 +1,54 @@
+<div class="rolavel">
+  <div class="container">
+    <h1 class="titulo-pagina">Denúncias</h1>
+
+    <div class="chips filtros" role="tablist" aria-label="Filtrar por status">
+      @for (f of filtros; track f.rotulo) {
+        <button type="button" class="chip" role="tab" [class.ativo]="status() === f.valor"
+                [attr.aria-selected]="status() === f.valor" (click)="status.set(f.valor)">{{ f.rotulo }}</button>
+      }
+    </div>
+
+    @if (erro()) { <p class="erro" role="alert">{{ erro() }}</p> }
+
+    <div class="denuncias">
+      @for (d of lista.itens(); track d.id) {
+        <article class="cartao-ui denuncia">
+          <div class="topo">
+            <strong>{{ d.motivo }}</strong>
+            <span class="selo" [attr.data-status]="d.status">{{ rotulos[d.status] }}</span>
+          </div>
+          @if (d.descricao) { <p class="descricao">{{ d.descricao }}</p> }
+          <div class="meta">
+            <span>{{ d.dataDenuncia | date: 'dd/MM/yyyy HH:mm' }}</span>
+            @if (d.postId) { <a [routerLink]="['/post', d.postId]">Ver música denunciada</a> }
+            @if (d.artistaId) { <a [routerLink]="['/artista', d.artistaId]">Ver artista denunciado</a> }
+          </div>
+          <div class="linha">
+            @for (s of todosStatus; track s) {
+              @if (s !== d.status) {
+                <button type="button" class="btn btn-secundario btn-pequeno" (click)="alterar(d, s)">
+                  Marcar como {{ rotulos[s].toLowerCase() }}
+                </button>
+              }
+            }
+          </div>
+        </article>
+      }
+    </div>
+
+    @if (lista.carregando() && lista.itens().length === 0) {
+      <p class="vazio">Carregando...</p>
+    } @else if (lista.iniciada() && lista.itens().length === 0 && !lista.erro()) {
+      <p class="vazio">Nenhuma denúncia por aqui.</p>
+    }
+    @if (lista.erro()) { <p class="vazio aviso-erro">{{ lista.erro() }}</p> }
+
+    @if (lista.temMais() && lista.iniciada() && lista.itens().length > 0) {
+      <p class="linha" style="justify-content: center; margin-top: 1.5rem">
+        <button type="button" class="btn btn-secundario btn-pequeno" [disabled]="lista.carregando()"
+                (click)="lista.carregarMais()">Carregar mais</button>
+      </p>
+    }
+  </div>
+</div>

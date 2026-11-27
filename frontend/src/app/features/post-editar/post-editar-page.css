@@ -1,0 +1,2 @@
+.capas { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.capas img { width: 96px; aspect-ratio: 1; object-fit: cover; border-radius: 12px; }

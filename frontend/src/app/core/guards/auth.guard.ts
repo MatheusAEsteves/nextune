@@ -14,6 +14,11 @@ export const visitanteGuard: CanActivateFn = () => {
   return inject(AuthService).autenticado() ? inject(Router).createUrlTree(['/']) : true;
 };
 
+/** Áreas de administração. O backend também recusa (403) quem não é ADMIN. */
+export const adminGuard: CanActivateFn = () => {
+  return inject(AuthService).admin() ? true : inject(Router).createUrlTree(['/']);
+};
+
 /** Sem gêneros escolhidos (lista vazia), manda para o onboarding antes do feed. */
 export const preferenciasGuard: CanActivateFn = async () => {
   const router = inject(Router);

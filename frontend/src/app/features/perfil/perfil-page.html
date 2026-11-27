@@ -1,0 +1,64 @@
+<div class="rolavel">
+  <div class="container">
+    <h1 class="titulo-pagina">Meu perfil</h1>
+
+    @if (auth.usuario(); as u) {
+      <section class="cartao-ui topo">
+        <app-avatar [nome]="u.nome" [foto]="u.fotoPerfil" [tamanho]="96" />
+        <div class="dados">
+          <strong class="nome">{{ u.nome }}</strong>
+          <span class="email">{{ u.email }}</span>
+          <div class="linha">
+            <label class="btn btn-secundario btn-pequeno enviar" [class.desabilitado]="enviandoFoto()">
+              <app-icone nome="enviar" [tamanho]="16" />
+              {{ enviandoFoto() ? 'Enviando...' : 'Trocar foto' }}
+              <input type="file" accept="image/jpeg,image/png,image/webp" hidden [disabled]="enviandoFoto()"
+                     (change)="escolherFoto($event)" />
+            </label>
+            @if (u.fotoPerfil) {
+              <button type="button" class="btn btn-secundario btn-pequeno" [disabled]="enviandoFoto()"
+                      (click)="removerFoto()">Remover foto</button>
+            }
+          </div>
+        </div>
+      </section>
+
+      <form class="cartao-ui form" (ngSubmit)="salvar()">
+        <div class="campo">
+          <label for="nome">Nome</label>
+          <input id="nome" name="nome" type="text" maxlength="150" [(ngModel)]="nome" />
+        </div>
+        <div class="campo">
+          <label for="bio">Bio</label>
+          <textarea id="bio" name="bio" rows="4" maxlength="2000" [(ngModel)]="bio"
+                    placeholder="Conte um pouco sobre você e o que gosta de ouvir"></textarea>
+        </div>
+        @if (erro()) { <p class="erro" role="alert">{{ erro() }}</p> }
+        @if (mensagem()) { <p class="ok" role="status">{{ mensagem() }}</p> }
+        <div class="linha">
+          <button class="btn btn-primario btn-pequeno" type="submit" [disabled]="salvando()">
+            {{ salvando() ? 'Salvando...' : 'Salvar alterações' }}
+          </button>
+          <a class="btn btn-secundario btn-pequeno" routerLink="/onboarding">Editar meus gêneros</a>
+        </div>
+      </form>
+
+      <section class="cartao-ui">
+        <h2>Artistas que sigo</h2>
+        @for (a of seguindo.itens(); track a.id) {
+          <a class="artista" [routerLink]="['/artista', a.id]">
+            <app-avatar [nome]="a.nomeArtistico" [tamanho]="40" />
+            <span>{{ a.nomeArtistico }}</span>
+          </a>
+        } @empty {
+          @if (seguindo.iniciada()) { <p class="vazio">Você ainda não segue nenhum artista.</p> }
+        }
+        @if (seguindo.temMais() && seguindo.iniciada() && seguindo.itens().length > 0) {
+          <button type="button" class="btn btn-secundario btn-pequeno" [disabled]="seguindo.carregando()"
+                  (click)="seguindo.carregarMais()">Carregar mais</button>
+        }
+        @if (seguindo.erro()) { <p class="erro">{{ seguindo.erro() }}</p> }
+      </section>
+    }
+  </div>
+</div>

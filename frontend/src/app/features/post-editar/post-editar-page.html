@@ -1,0 +1,58 @@
+<div class="rolavel">
+  <div class="container">
+    <h1 class="titulo-pagina">Editar música</h1>
+
+    @if (post(); as p) {
+      @if (!permitido()) {
+        <p class="vazio">Só o artista que publicou esta música pode editá-la.</p>
+      } @else {
+        <form class="cartao-ui form" (ngSubmit)="salvar()">
+          <div class="campo">
+            <label for="titulo">Título</label>
+            <input id="titulo" name="titulo" type="text" maxlength="150" [(ngModel)]="titulo" />
+            @if (erroCampos()['titulo']) { <span class="erro">{{ erroCampos()['titulo'] }}</span> }
+          </div>
+
+          <div class="campo">
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" name="descricao" rows="3" maxlength="5000" [(ngModel)]="descricao"></textarea>
+          </div>
+
+          <div class="campo">
+            <label for="link">Link da música completa</label>
+            <input id="link" name="link" type="url" maxlength="255" [(ngModel)]="linkMusica" />
+            @if (erroCampos()['linkMusica']) { <span class="erro">{{ erroCampos()['linkMusica'] }}</span> }
+          </div>
+
+          <div class="campo">
+            <label>Gêneros (de 1 a 5)</label>
+            <app-seletor-generos [generos]="generos()" [maximo]="5" [(selecionados)]="generoIds" />
+            @if (erroCampos()['generoIds']) { <span class="erro">{{ erroCampos()['generoIds'] }}</span> }
+          </div>
+
+          <div class="campo">
+            <label for="capa">Trocar capa (opcional)</label>
+            <div class="capas">
+              <img [src]="previaCapa() ?? api.midiaUrl(p.capa)" alt="Capa" />
+              <input id="capa" type="file" accept="image/jpeg,image/png,image/webp" (change)="escolherCapa($event)" />
+            </div>
+            @if (erroCampos()['capa']) { <span class="erro">{{ erroCampos()['capa'] }}</span> }
+          </div>
+
+          @if (erroGeral()) { <p class="erro" role="alert">{{ erroGeral() }}</p> }
+
+          <div class="linha">
+            <button class="btn btn-primario btn-pequeno" type="submit" [disabled]="salvando()">
+              {{ salvando() ? 'Salvando...' : 'Salvar alterações' }}
+            </button>
+            <a class="btn btn-secundario btn-pequeno" [routerLink]="['/post', p.id]">Cancelar</a>
+          </div>
+        </form>
+      }
+    } @else if (erroGeral()) {
+      <p class="vazio aviso-erro">{{ erroGeral() }}</p>
+    } @else {
+      <p class="vazio">Carregando...</p>
+    }
+  </div>
+</div>

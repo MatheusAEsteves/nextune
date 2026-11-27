@@ -1,0 +1,11 @@
+.detalhe { display: grid; grid-template-columns: minmax(220px, 340px) 1fr; gap: 2rem; margin-bottom: 2rem; align-items: start; }
+.capa { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 20px; background: var(--surface-2); }
+.info { display: grid; gap: .85rem; min-width: 0; }
+h1 { margin: 0; font-size: 2rem; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.artista { color: var(--accent); font-weight: 700; text-decoration: none; justify-self: start; }
+.artista:hover { text-decoration: underline; }
+.genero { background: var(--surface-2); border-radius: 999px; padding: .2rem .75rem; font-size: .8rem; }
+.descricao { margin: 0; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; color: #d6d6de; }
+audio { width: 100%; }
+.acoes .ativo { color: var(--accent); border-color: var(--accent); }
+@media (max-width: 760px) { .detalhe { grid-template-columns: 1fr; } .capa { max-width: 340px; } }

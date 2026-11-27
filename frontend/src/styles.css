@@ -35,3 +35,40 @@ a { color: inherit; }
 .btn:active:not(:disabled) { transform: scale(.98); }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
 .btn-primario { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; }
+
+/* ---------- utilitários compartilhados pelas telas ---------- */
+.btn { text-decoration: none; }
+.btn-secundario { background: var(--surface-2); border: 1px solid var(--borda); }
+.btn-secundario:hover:not(:disabled) { background: #2b2b37; }
+.btn-perigo { background: #3a1620; color: #ff7b8f; border: 1px solid #5a2430; }
+.btn-pequeno { padding: .5rem 1rem; font-size: .85rem; }
+
+.rolavel { height: 100%; overflow-y: auto; }
+.container { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+.titulo-pagina { margin: 0 0 1.5rem; font-size: 1.7rem; letter-spacing: -.02em; }
+.cartao-ui { background: var(--surface); border: 1px solid var(--borda); border-radius: 20px; padding: 1.5rem; }
+.linha { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.vazio { color: var(--muted); text-align: center; padding: 3rem 1rem; }
+.aviso-erro { color: #ff7b8f; }
+.ajuda { color: var(--muted); font-size: .8rem; }
+.erro { color: #ff7b8f; font-size: .85rem; }
+
+.form { display: grid; gap: 1.1rem; }
+.campo { display: grid; gap: .35rem; }
+.campo label { font-size: .85rem; color: var(--muted); }
+.campo input:not([type='file']), .campo textarea, .campo select {
+  width: 100%; background: var(--surface-2); border: 1px solid var(--borda);
+  border-radius: 12px; padding: .75rem 1rem;
+}
+.campo textarea { resize: vertical; min-height: 96px; }
+.campo input:focus, .campo textarea:focus, .campo select:focus { outline: none; border-color: var(--accent); }
+.campo input[type='file'] { color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip {
+  padding: .45rem 1rem; border-radius: 999px; background: var(--surface-2);
+  border: 1px solid var(--borda); font-weight: 600; font-size: .9rem;
+  transition: background .15s, border-color .15s;
+}
+.chip:hover { border-color: var(--muted); }
+.chip.ativo { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; color: #fff; }

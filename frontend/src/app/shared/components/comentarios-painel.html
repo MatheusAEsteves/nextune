@@ -1,0 +1,50 @@
+<header class="topo">
+  <h2>Comentários</h2>
+  @if (!embutido()) {
+    <button type="button" class="fechar" aria-label="Fechar comentários" (click)="fechar.emit()">
+      <app-icone nome="fechar" />
+    </button>
+  }
+</header>
+
+<div class="lista">
+  @for (c of lista.itens(); track c.id) {
+    <article class="comentario">
+      <app-avatar [nome]="c.autor.nome" [foto]="c.autor.fotoPerfil" [tamanho]="36" />
+      <div class="corpo">
+        <div class="cabecalho">
+          <strong>{{ c.autor.nome }}</strong>
+          <span class="data">{{ tempo(c.dataComentario) }}</span>
+        </div>
+        <p>{{ c.conteudo }}</p>
+      </div>
+      @if (podeRemover(c)) {
+        <button type="button" class="lixeira" aria-label="Excluir comentário" (click)="remover(c)">
+          <app-icone nome="lixeira" [tamanho]="18" />
+        </button>
+      }
+    </article>
+  }
+
+  @if (lista.carregando() && lista.itens().length === 0) {
+    <p class="vazio">Carregando...</p>
+  } @else if (lista.iniciada() && lista.itens().length === 0) {
+    <p class="vazio">Seja o primeiro a comentar.</p>
+  }
+
+  @if (lista.temMais() && lista.iniciada()) {
+    <button type="button" class="mais" [disabled]="lista.carregando()" (click)="lista.carregarMais()">
+      Ver mais comentários
+    </button>
+  }
+  @if (lista.erro()) { <p class="erro">{{ lista.erro() }}</p> }
+</div>
+
+<form class="envio" (ngSubmit)="enviar()">
+  @if (erro()) { <p class="erro">{{ erro() }}</p> }
+  <textarea name="texto" rows="2" maxlength="1000" placeholder="Adicione um comentário..."
+            [(ngModel)]="texto" (keydown.control.enter)="enviar()"></textarea>
+  <button class="btn btn-primario btn-pequeno" type="submit" [disabled]="enviando() || !texto().trim()">
+    {{ enviando() ? 'Enviando...' : 'Comentar' }}
+  </button>
+</form>

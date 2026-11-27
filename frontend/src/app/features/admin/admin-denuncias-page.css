@@ -1,0 +1,11 @@
+.filtros { margin-bottom: 1.25rem; }
+.denuncias { display: grid; gap: 1rem; }
+.denuncia { display: grid; gap: .75rem; }
+.topo { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.descricao { margin: 0; color: #d6d6de; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+.meta { display: flex; gap: 1rem; flex-wrap: wrap; color: var(--muted); font-size: .85rem; }
+.meta a { color: var(--accent); }
+.selo { padding: .15rem .7rem; border-radius: 999px; font-size: .75rem; font-weight: 700; background: var(--surface-2); }
+.selo[data-status='PENDENTE'] { background: #3a2f12; color: #ffd36e; }
+.selo[data-status='ANALISADA'] { background: #12303a; color: #6ed3ff; }
+.selo[data-status='RESOLVIDA'] { background: #123a22; color: #6ee7a0; }

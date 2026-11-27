@@ -1,0 +1,22 @@
+<div class="rolavel">
+  <div class="container">
+    <h1 class="titulo-pagina">{{ titulo() }}</h1>
+
+    @if (lista.itens().length > 0) {
+      <app-post-grade [posts]="lista.itens()" />
+    } @else if (lista.carregando()) {
+      <p class="vazio">Carregando...</p>
+    } @else if (lista.iniciada() && !lista.erro()) {
+      <p class="vazio">{{ vazio() }}</p>
+    }
+
+    @if (lista.erro()) { <p class="vazio aviso-erro">{{ lista.erro() }}</p> }
+
+    @if (lista.temMais() && lista.iniciada() && lista.itens().length > 0) {
+      <p class="linha" style="justify-content: center; margin-top: 1.5rem">
+        <button type="button" class="btn btn-secundario btn-pequeno" [disabled]="lista.carregando()"
+                (click)="lista.carregarMais()">Carregar mais</button>
+      </p>
+    }
+  </div>
+</div>

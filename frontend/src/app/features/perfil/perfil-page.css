@@ -1,0 +1,11 @@
+.cartao-ui { margin-bottom: 1.25rem; }
+.topo { display: flex; align-items: center; gap: 1.5rem; }
+.dados { display: grid; gap: .5rem; min-width: 0; }
+.nome { font-size: 1.3rem; }
+.email { color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+.enviar { cursor: pointer; }
+.enviar.desabilitado { opacity: .5; pointer-events: none; }
+.ok { color: #6ee7a0; margin: 0; font-size: .9rem; }
+h2 { margin: 0 0 1rem; font-size: 1.15rem; }
+.artista { display: flex; align-items: center; gap: .75rem; padding: .5rem 0; text-decoration: none; font-weight: 600; }
+.artista:hover span { text-decoration: underline; }

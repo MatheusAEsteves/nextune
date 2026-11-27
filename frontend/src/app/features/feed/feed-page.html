@@ -4,7 +4,7 @@
        (play)="tocando.set(true)"
        (pause)="tocando.set(false)"></audio>
 
-<div class="pagina">
+<div class="pagina" [class.com-gaveta]="!!comentariosDe()">
   <div class="feed" role="feed" aria-label="Feed de músicas">
     @for (post of posts(); track post.id; let i = $index) {
       @let curtido = !!curtidos()[post.id];
@@ -21,7 +21,9 @@
 
           <div class="info">
             <div class="linha-artista">
-              <strong class="artista">{{ post.artista.nomeArtistico }}</strong>
+              <a class="artista" [routerLink]="['/artista', post.artista.id]" (click)="$event.stopPropagation()">
+                {{ post.artista.nomeArtistico }}
+              </a>
               <button type="button" class="seguir" [class.ativo]="estaSeguindo(post)"
                       (click)="alternarSeguir($event, post)">
                 {{ estaSeguindo(post) ? 'Seguindo' : 'Seguir' }}
@@ -47,6 +49,11 @@
             <span class="bolha"><app-icone nome="coracao" [preenchido]="curtido" /></span>
             <span>{{ totalCurtidas(post) }}</span>
           </button>
+          <button type="button" class="acao" [class.ativo]="comentariosDe()?.id === post.id"
+                  aria-label="Comentários" (click)="alternarComentarios(post)">
+            <span class="bolha"><app-icone nome="comentario" /></span>
+            <span>Comentar</span>
+          </button>
           <button type="button" class="acao" [class.ativo]="salvo" [attr.aria-pressed]="salvo"
                   aria-label="Salvar" (click)="alternarSalvo(post)">
             <span class="bolha"><app-icone nome="salvar" [preenchido]="salvo" /></span>
@@ -60,6 +67,10 @@
           <button type="button" class="acao" [attr.aria-pressed]="mudo()" aria-label="Som" (click)="alternarMudo()">
             <span class="bolha"><app-icone [nome]="mudo() ? 'mudo' : 'volume'" /></span>
             <span>{{ mudo() ? 'Mudo' : 'Som' }}</span>
+          </button>
+          <button type="button" class="acao" aria-label="Denunciar" (click)="denunciando.set(post)">
+            <span class="bolha"><app-icone nome="bandeira" /></span>
+            <span>Denunciar</span>
           </button>
         </div>
       </section>
@@ -88,6 +99,12 @@
     </button>
   </div>
 
+  @if (comentariosDe(); as c) {
+    <aside class="gaveta" aria-label="Comentários">
+      <app-comentarios-painel [postId]="c.id" (fechar)="comentariosDe.set(null)" />
+    </aside>
+  }
+
   @if (erro()) {
     <div class="aviso" role="alert">
       <span>{{ erro() }}</span>
@@ -95,3 +112,7 @@
     </div>
   }
 </div>
+
+@if (denunciando(); as d) {
+  <app-denuncia-dialogo [postId]="d.id" (fechar)="denunciando.set(null)" />
+}

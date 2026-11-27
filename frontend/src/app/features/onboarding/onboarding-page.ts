@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { Genero } from '../../core/models/api.models';
+import { Genero, Preferencia } from '../../core/models/api.models';
 import { ApiService } from '../../core/services/api.service';
 import { mensagemDeErro } from '../../core/util/erros';
 
@@ -27,7 +27,12 @@ export class OnboardingPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      this.generos.set(await firstValueFrom(this.api.generos()));
+      const [generos, atuais] = await Promise.all([
+        firstValueFrom(this.api.generos()),
+        firstValueFrom(this.api.minhasPreferencias()).catch(() => [] as Preferencia[]),
+      ]);
+      this.generos.set(generos);
+      this.escolhidos.set(atuais.map((p) => p.generoId)); // quem volta para editar já vê as escolhas atuais
     } catch (e) {
       this.erro.set(mensagemDeErro(e).geral);
     } finally {
